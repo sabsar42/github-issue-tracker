@@ -17,21 +17,17 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   int _selectedIndex = 0;
   final AuthController _authController = Get.put(AuthController());
 
+  final List<Widget> _screens = [
+    RepoListScreen(),
+    ProfileScreen(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() {
-        final username = _authController.username.value;
-        return IndexedStack(
-          index: _selectedIndex,
-          children: [
-            RepoListScreen(username: username),
-            ProfileScreen(username: username),
-          ],
-        );
-      }),
+       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black54,
+        backgroundColor: Colors.black87,
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
@@ -43,7 +39,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
         showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.folder_copy_outlined), label: 'Issues'),
+              icon: Icon(Icons.folder_copy_outlined), label: 'Repositories'),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_2_outlined), label: 'Profile'),
         ],

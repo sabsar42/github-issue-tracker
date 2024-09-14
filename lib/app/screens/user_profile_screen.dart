@@ -1,27 +1,31 @@
 // lib/screens/profile_screen.dart
 import 'package:flutter/material.dart';
-import '../services/github_service.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../controller/auth_controller.dart';
 import '../models/user_model.dart';
+import '../services/github_service.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String username;
 
-  const ProfileScreen({Key? key, required this.username}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthController _authController = Get.put(AuthController());
   late Future<UserModel> userProfile;
 
   @override
   void initState() {
     super.initState();
-    userProfile = GitHubService().fetchUserProfile(widget.username)
+    userProfile = GitHubService().fetchUserProfile(_authController.username.value)
         .then((data) => UserModel.fromJson(data));
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,25 +48,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(user.avatarUrl),
-                    radius: 50,
+                  Center(
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(user.avatarUrl),
+                      radius: 50,
+                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
-                    user.name,
+                    user.name ?? 'No Name Provided',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
-                  Text(user.bio),
+                  if (user.bio != null)
+                    Text(user.bio!, style: TextStyle(fontSize: 16)),
                   SizedBox(height: 16),
-                  Text('Public Repositories: ${user.publicRepos}'),
+                  if (user.location != null)
+                    Text('Location: ${user.location}',
+                        style: TextStyle(fontSize: 16)),
+                  SizedBox(height: 16),
+                  Text('Public Repositories: ${user.publicRepos}',
+                      style: TextStyle(fontSize: 16)),
+                  SizedBox(height: 8),
+                  Text('Followers: ${user.followers}',
+                      style: TextStyle(fontSize: 16)),
+                  SizedBox(height: 8),
+                  Text('Following: ${user.following}',
+                      style: TextStyle(fontSize: 16)),
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      // Implement navigation to the README file if needed
+                      // Implement navigation to user's GitHub profile
+                      _launchURL(user.htmlUrl);
                     },
-                    child: Text('View Profile'),
+                    child: Text('View GitHub Profile'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                     ),
@@ -74,5 +93,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
     );
+  }
+
+  // Helper function to open URLs
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

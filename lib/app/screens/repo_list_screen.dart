@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../controller/auth_controller.dart';
 import '../services/github_service.dart';
 import 'issue_list_screen.dart';
 
 class RepoListScreen extends StatefulWidget {
-  final String username;
 
-  RepoListScreen({required this.username});
+  RepoListScreen({Key? key}) : super(key: key);
 
   @override
   _RepoListScreenState createState() => _RepoListScreenState();
 }
 
 class _RepoListScreenState extends State<RepoListScreen> {
+  final AuthController _authController = Get.put(AuthController());
+
   late Future<List<dynamic>> _repos;
   late Future<List<dynamic>> _publicRepos;
   @override
   void initState() {
     super.initState();
-    _repos = GitHubService().fetchUserRepos(widget.username);
+    _repos = GitHubService().fetchUserRepos(_authController.username.value);
     _publicRepos = GitHubService().fetchPublicReposWithMostIssues();
   }
 
