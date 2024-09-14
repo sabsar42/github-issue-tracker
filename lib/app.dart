@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:get/get_instance/src/bindings_interface.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:flutter/material.dart';  // Use Material package instead of Cupertino for consistency
+import 'package:get/get.dart';
+import 'package:github_issue_tracker/app/screens/auth/sign_in.dart';
 
+import 'app/controller/auth_controller.dart';
 import 'app/screens/main_bottom_nav_screen.dart';
-import 'controller_binder.dart';
 
 class GithubIssueTracker extends StatelessWidget {
   const GithubIssueTracker({super.key});
@@ -12,8 +12,10 @@ class GithubIssueTracker extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const MainBottomNavScreen(),
-      initialBinding:ControllerBinder(),
+      home: SignIn(),
+      initialBinding: BindingsBuilder(() {
+        Get.put(AuthController());
+      }),
     );
   }
 }
