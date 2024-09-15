@@ -16,12 +16,10 @@ class RepoListScreen extends StatefulWidget {
 class _RepoListScreenState extends State<RepoListScreen> {
   final AuthController _authController = Get.put(AuthController());
 
-  late Future<List<dynamic>> _repos;
   late Future<List<dynamic>> _publicRepos;
   @override
   void initState() {
     super.initState();
-    _repos = GitHubService().fetchUserRepos(_authController.username.value);
     _publicRepos = GitHubService().fetchPublicReposWithMostIssues();
   }
 

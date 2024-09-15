@@ -1,4 +1,5 @@
 // lib/models/user_model.dart
+
 class UserModel {
   final String login;
   final int id;
@@ -13,6 +14,7 @@ class UserModel {
   final int following;
   final int publicRepos;
   final String? location;
+
 
   UserModel({
     required this.login,
