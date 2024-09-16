@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+
 import '../models/issue_model.dart';
 import '../models/repo_model.dart';
 import '../services/github_service.dart';
@@ -7,7 +8,6 @@ import '../services/github_service.dart';
 class IssueListScreen extends StatefulWidget {
   final RepoModel repo;
   IssueListScreen({required this.repo});
-
   @override
   _IssueListScreenState createState() => _IssueListScreenState();
 }
@@ -15,12 +15,20 @@ class IssueListScreen extends StatefulWidget {
 class _IssueListScreenState extends State<IssueListScreen> {
   late GitHubService _gitHubService;
   late Future<List<IssueModel>> _issuesFuture;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _gitHubService = GitHubService();
-    _issuesFuture = _gitHubService.fetchIssues(widget.repo.ownerLogin, widget.repo.name);
+    _issuesFuture =
+        _gitHubService.fetchIssues(widget.repo.ownerLogin, widget.repo.name);
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text.toLowerCase();
+      });
+    });
   }
 
   @override
@@ -36,36 +44,70 @@ class _IssueListScreenState extends State<IssueListScreen> {
         ),
         title: Text(
           "Issues: ${widget.repo.name}",
-          style: TextStyle(color: Colors.white,
-          fontSize: 19,
-          fontWeight: FontWeight.w100),
+          style: TextStyle(
+              color: Colors.white, fontSize: 19, fontWeight: FontWeight.w100),
         ),
         backgroundColor: Colors.black87,
         elevation: 0,
       ),
       backgroundColor: Colors.black54,
-      body: FutureBuilder<List<IssueModel>>(
-        future: _issuesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Colors.black54,
+      body: Column(
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search Issues...',
+                hintStyle: TextStyle(color: Colors.white70),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(3.0),
+                  borderSide: BorderSide(color: Colors.white70),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(3.0),
+                  borderSide: BorderSide(color: Colors.blueGrey),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(color: Colors.white70),
+                ),
               ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-                child: Text('Error: ${snapshot.error}',
-                    style: TextStyle(color: Colors.white)));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-                child: Text('No issues found',
-                    style: TextStyle(color: Colors.white)));
-          } else {
-            final issues = snapshot.data!;
-            return IssueListView(issues);
-          }
-        },
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<IssueModel>>(
+              future: _issuesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black54,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text('Error: ${snapshot.error}',
+                          style: TextStyle(color: Colors.white)));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                      child: Text('No issues found',
+                          style: TextStyle(color: Colors.white)));
+                } else {
+                  final issues = snapshot.data!;
+                  final filteredIssues = issues
+                      .where((issue) =>
+                          issue.title?.toLowerCase().contains(_searchQuery) ??
+                          false)
+                      .toList();
+                  return IssueListView(filteredIssues);
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -128,7 +170,7 @@ class _IssueListScreenState extends State<IssueListScreen> {
               child: CircularProgressIndicator(
                 value: loadingProgress.expectedTotalBytes != null
                     ? loadingProgress.cumulativeBytesLoaded /
-                        (loadingProgress.expectedTotalBytes ?? 1)
+                    (loadingProgress.expectedTotalBytes ?? 1)
                     : null,
                 color: Colors.black54,
               ),
