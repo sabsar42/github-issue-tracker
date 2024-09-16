@@ -5,6 +5,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
-      GithubIssueTracker()
+      const GithubIssueTracker()
   );
 }

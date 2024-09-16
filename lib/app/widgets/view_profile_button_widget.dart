@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ViewProfileButton extends StatelessWidget {
   final String url;
-  const ViewProfileButton({Key? key, required this.url}) : super(key: key);
+  const ViewProfileButton({super.key, required this.url});
 
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);

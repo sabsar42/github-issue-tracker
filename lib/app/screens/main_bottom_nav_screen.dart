@@ -14,8 +14,8 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    RepoListScreen(),
-    ProfileScreen(),
+    const RepoListScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -23,7 +23,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(
               color: Colors.transparent,
@@ -32,7 +32,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
           ),
         ),
         child: BottomNavigationBar(
-          backgroundColor: Color.fromARGB(255, 3, 10, 10),
+          backgroundColor: const Color.fromARGB(255, 3, 10, 10),
           elevation: 8,
           currentIndex: _selectedIndex,
           onTap: (index) {

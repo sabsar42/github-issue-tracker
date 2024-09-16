@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             _authController.username.value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.w300,
               color: Colors.white, // Ensure the text is visible

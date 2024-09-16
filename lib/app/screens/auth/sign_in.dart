@@ -9,11 +9,13 @@ class SignIn extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final AuthController _authController = Get.put(AuthController());
 
+  SignIn({super.key});
+
   void showSnackBar(String message) {
     var snackbar = SnackBar(
       content: Text(
         message,
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
       backgroundColor: Colors.white,
     );
@@ -41,8 +43,8 @@ class SignIn extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Github Issue Tracker',
                   style: TextStyle(
                     fontFamily: 'FontMain',
@@ -50,9 +52,9 @@ class SignIn extends StatelessWidget {
                     fontWeight: FontWeight.w100,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(28, 10, 28, 10),
+                  padding: const EdgeInsets.fromLTRB(28, 10, 28, 10),
                   child: TextFormField(
                     controller: usernameController,
                     keyboardType: TextInputType.emailAddress,
@@ -62,13 +64,13 @@ class SignIn extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       labelText: 'Github Username',
-                      floatingLabelStyle: TextStyle(
+                      floatingLabelStyle: const TextStyle(
                           color: Colors.brown),
                       hintText: '',
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
@@ -77,25 +79,25 @@ class SignIn extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MainBottomNavScreen(),
+                          builder: (context) => const MainBottomNavScreen(),
                         ),
                       );
                       showSnackBar("Sign In Successful");
                     },
-                    child: Text(
-                      "Continue",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       elevation: 4.0,
                       backgroundColor: Colors.black,
-                      fixedSize: Size(350.0, 60.0),
+                      fixedSize: const Size(350.0, 60.0),
+                    ),
+                    child: const Text(
+                      "Continue",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

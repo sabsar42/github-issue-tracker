@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-
 import '../models/issue_model.dart';
 import '../models/repo_model.dart';
 import '../services/github_service.dart';
 
 class IssueListScreen extends StatefulWidget {
   final RepoModel repo;
-  IssueListScreen({required this.repo});
+  const IssueListScreen({super.key, required this.repo});
   @override
   _IssueListScreenState createState() => _IssueListScreenState();
 }
@@ -22,8 +21,7 @@ class _IssueListScreenState extends State<IssueListScreen> {
   void initState() {
     super.initState();
     _gitHubService = GitHubService();
-    _issuesFuture =
-        _gitHubService.fetchIssues(widget.repo.ownerLogin, widget.repo.name);
+    _issuesFuture = _gitHubService.fetchIssues(widget.repo.ownerLogin, widget.repo.name);
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text.toLowerCase();
@@ -37,15 +35,16 @@ class _IssueListScreenState extends State<IssueListScreen> {
       appBar: AppBar(
         toolbarHeight: 70,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white70),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white70),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Text(
           "Issues: ${widget.repo.name}",
-          style: TextStyle(
-              color: Colors.white, fontSize: 19, fontWeight: FontWeight.w100),
+          style: const TextStyle(color: Colors.white,
+              fontSize: 19,
+              fontWeight: FontWeight.w100),
         ),
         backgroundColor: Colors.black87,
         elevation: 0,
@@ -54,27 +53,26 @@ class _IssueListScreenState extends State<IssueListScreen> {
       body: Column(
         children: [
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search Issues...',
-                hintStyle: TextStyle(color: Colors.white70),
+                hintStyle: const TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3.0),
-                  borderSide: BorderSide(color: Colors.white70),
+                  borderSide: const BorderSide(color: Colors.white70),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3.0),
-                  borderSide: BorderSide(color: Colors.blueGrey),
+                  borderSide: const BorderSide(color: Colors.blueGrey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(color: Colors.white70),
+                  borderSide: const BorderSide(color: Colors.white70),
                 ),
               ),
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
           Expanded(
@@ -82,7 +80,7 @@ class _IssueListScreenState extends State<IssueListScreen> {
               future: _issuesFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(
                       color: Colors.black54,
                     ),
@@ -90,19 +88,18 @@ class _IssueListScreenState extends State<IssueListScreen> {
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text('Error: ${snapshot.error}',
-                          style: TextStyle(color: Colors.white)));
+                          style: const TextStyle(color: Colors.white)));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(
+                  return const Center(
                       child: Text('No issues found',
                           style: TextStyle(color: Colors.white)));
                 } else {
                   final issues = snapshot.data!;
                   final filteredIssues = issues
                       .where((issue) =>
-                          issue.title?.toLowerCase().contains(_searchQuery) ??
-                          false)
+                  issue.title?.toLowerCase().contains(_searchQuery) ?? false)
                       .toList();
-                  return IssueListView(filteredIssues);
+                  return issueListView(filteredIssues);
                 }
               },
             ),
@@ -112,9 +109,9 @@ class _IssueListScreenState extends State<IssueListScreen> {
     );
   }
 
-  ListView IssueListView(List<IssueModel> issues) {
+  ListView issueListView(List<IssueModel> issues) {
     return ListView.builder(
-      padding: EdgeInsets.all(9.0),
+      padding: const EdgeInsets.all(9.0),
       itemCount: issues.length,
       itemBuilder: (context, index) {
         final issue = issues[index];
@@ -122,19 +119,19 @@ class _IssueListScreenState extends State<IssueListScreen> {
         return Card(
           color: Colors.grey[900],
           elevation: 2,
-          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: ExpansionTile(
             leading: Icon(
-              Icons.commit,
+              Icons.commit_sharp,
               color: issue.state == 'open' ? Colors.green : Colors.red,
               size: 24,
             ),
             title: Text(
               issue.title ?? 'No Title',
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
                   color: Colors.white),
@@ -146,8 +143,8 @@ class _IssueListScreenState extends State<IssueListScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            tilePadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            childrenPadding: EdgeInsets.all(16.0),
+            tilePadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            childrenPadding: const EdgeInsets.all(16.0),
             children: [
               expandedMarkDown(issue),
             ],
@@ -177,20 +174,20 @@ class _IssueListScreenState extends State<IssueListScreen> {
             );
           },
           errorBuilder: (context, error, stackTrace) {
-            return Center(
+            return const Center(
                 child: Text('Image failed to load',
                     style: TextStyle(color: Colors.red)));
           },
         );
       },
       styleSheet: MarkdownStyleSheet(
-        p: TextStyle(fontSize: 14, color: Colors.white70),
-        a: TextStyle(color: Colors.blueGrey),
-        h1: TextStyle(
+        p: const TextStyle(fontSize: 14, color: Colors.white70),
+        a: const TextStyle(color: Colors.blueGrey),
+        h1: const TextStyle(
             fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-        h2: TextStyle(
+        h2: const TextStyle(
             fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
-        h3: TextStyle(
+        h3: const TextStyle(
             fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );

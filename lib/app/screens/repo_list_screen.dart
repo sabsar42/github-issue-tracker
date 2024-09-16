@@ -5,7 +5,7 @@ import '../services/github_service.dart';
 import 'issue_list_screen.dart';
 
 class RepoListScreen extends StatefulWidget {
-  RepoListScreen({Key? key}) : super(key: key);
+  const RepoListScreen({super.key});
 
   @override
   _RepoListScreenState createState() => _RepoListScreenState();
@@ -13,8 +13,8 @@ class RepoListScreen extends StatefulWidget {
 
 class _RepoListScreenState extends State<RepoListScreen> {
   final GitHubService _gitHubService = GitHubService();
-  List<RepoModel> _repos = [];
-  ScrollController _scrollController = ScrollController();
+  final List<RepoModel> _repos = [];
+  final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
   bool _hasMore = true;
   int _currentPage = 1;
@@ -75,7 +75,7 @@ class _RepoListScreenState extends State<RepoListScreen> {
       appBar: AppBar(
         toolbarHeight: 70,
         backgroundColor: Colors.black87,
-        title: Center(
+        title: const Center(
           child: Text(
             'REPOSITORIES',
             style: TextStyle(
@@ -84,16 +84,16 @@ class _RepoListScreenState extends State<RepoListScreen> {
         ),
       ),
       body: _repos.isEmpty && _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.separated(
               controller: _scrollController,
               itemCount: _repos.length + (_hasMore ? 1 : 0),
               // Add 1 for loading indicator
-              separatorBuilder: (context, index) => SizedBox(height: 0.1),
+              separatorBuilder: (context, index) => const SizedBox(height: 0.1),
               // Space between items
               itemBuilder: (context, index) {
                 if (index == _repos.length) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(
                       color: Colors.black54,
                       backgroundColor: Colors.black54,
@@ -109,7 +109,7 @@ class _RepoListScreenState extends State<RepoListScreen> {
 
 class RepoTile extends StatelessWidget {
   final RepoModel repo;
-  const RepoTile({Key? key, required this.repo}) : super(key: key);
+  const RepoTile({super.key, required this.repo});
 
   @override
   Widget build(BuildContext context) {
@@ -118,11 +118,11 @@ class RepoTile extends StatelessWidget {
       tileColor: Colors.black87,
       title: Text(
         repo.name,
-        style: TextStyle(
+        style: const TextStyle(
             fontWeight: FontWeight.w300, fontSize: 16, color: Colors.white),
       ),
       subtitle: Text('${repo.openIssuesCount} open issues'),
-      trailing: Icon(Icons.arrow_forward_ios),
+      trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         Navigator.push(
           context,
