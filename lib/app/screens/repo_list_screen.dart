@@ -107,7 +107,7 @@ class RepoTile extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => IssueListScreen(
-               repo: repo,
+              repo: repo,
             ),
           ),
         );

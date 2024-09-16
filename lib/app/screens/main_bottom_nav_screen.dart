@@ -4,7 +4,7 @@ import 'package:github_issue_tracker/app/screens/repo_list_screen.dart';
 import 'package:github_issue_tracker/app/screens/user_profile_screen.dart';
 
 import '../controller/auth_controller.dart';
-import 'issue_list_screen.dart';
+
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});
