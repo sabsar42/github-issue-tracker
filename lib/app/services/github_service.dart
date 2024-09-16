@@ -62,8 +62,8 @@ class GitHubService extends GetxController {
         }
       }
 
-      // Sort repositories alphabetically by name
-      repos.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      // // Sort repositories alphabetically by name
+      // repos.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
       return repos;
     } catch (e) {
@@ -106,29 +106,21 @@ class GitHubService extends GetxController {
     }
   }
 
-  Future<List<IssueModel>> fetchIssuesWithPagination({
-    required String repo,
-    int page = 1,
-    int perPage = 20,
-  }) async {
-    final url = Uri.parse('https://api.github.com/repos/$repo/issues?page=$page&per_page=$perPage');
+  Future<List<IssueModel>> fetchIssues(String owner, String repo) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/repos/$owner/$repo/issues'),
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+      },
+    );
 
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        List<dynamic> jsonData = data;
-
-        return jsonData.map((issueJson) => IssueModel.fromJson(issueJson)).toList();
-      } else {
-        throw Exception('Failed to load issues');
-      }
-    } catch (e) {
-      throw Exception('Error fetching issues: $e');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((json) => IssueModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load issues: ${response.statusCode} ${response.body}');
     }
   }
-
 
 
 }

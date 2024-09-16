@@ -106,7 +106,9 @@ class RepoTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => IssueListScreen(repo: repo),
+            builder: (context) => IssueListScreen(
+               repo: repo,
+            ),
           ),
         );
       },

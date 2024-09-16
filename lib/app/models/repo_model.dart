@@ -17,8 +17,8 @@ class RepoModel {
 
   factory RepoModel.fromJson(Map<String, dynamic> json) {
     return RepoModel(
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
+      name: json['name'] ?? 'Unnamed Repo',
+      description: json['description'] ?? 'No description',
       openIssuesCount: json['open_issues_count'] ?? 0,
       language: json['language'] ?? 'Unknown',
       ownerLogin: json['owner']['login'] ?? 'Unknown',

@@ -1,13 +1,22 @@
 class IssueModel {
+  final int id;
   final String title;
-  final int number;
+  final String body;
+  final String state; // e.g., "open" or "closed"
 
-  IssueModel({required this.title, required this.number});
+  IssueModel({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.state,
+  });
 
   factory IssueModel.fromJson(Map<String, dynamic> json) {
     return IssueModel(
-      title: json['title'] ?? 'No Title', // Handle null values
-      number: json['number'] ?? 0, // Handle null values
+      id: json['id'],
+      title: json['title'],
+      body: json['body'],
+      state: json['state'],
     );
   }
 }
