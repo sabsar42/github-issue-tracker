@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import '../controller/auth_controller.dart';
 import '../services/github_service.dart';
+import '../models/repo_model.dart';
 import 'issue_list_screen.dart';
 
 class RepoListScreen extends StatefulWidget {
-
   RepoListScreen({Key? key}) : super(key: key);
 
   @override
@@ -14,13 +11,63 @@ class RepoListScreen extends StatefulWidget {
 }
 
 class _RepoListScreenState extends State<RepoListScreen> {
-  final AuthController _authController = Get.put(AuthController());
+  final GitHubService _gitHubService = GitHubService();
+  List<RepoModel> _repos = [];
+  ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+  bool _hasMore = true;
+  int _currentPage = 1;
+  final int _perPage = 20;
 
-  late Future<List<dynamic>> _publicRepos;
   @override
   void initState() {
     super.initState();
-    _publicRepos = GitHubService().fetchPublicReposWithMostIssues();
+    _fetchRepos();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && _hasMore && !_isLoading) {
+        _fetchRepos();
+      }
+    });
+  }
+
+  Future<void> _fetchRepos() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      List<RepoModel> newRepos = await _gitHubService.fetchReposWithPagination(
+        organization: 'flutter',
+        page: _currentPage,
+        perPage: _perPage,
+      );
+
+      // Sort the repositories alphabetically by name
+      newRepos.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+      setState(() {
+        _repos.addAll(newRepos);
+        _isLoading = false;
+        _currentPage++;
+        if (newRepos.length < _perPage) {
+          _hasMore = false;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+
+
+
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -29,41 +76,40 @@ class _RepoListScreenState extends State<RepoListScreen> {
       appBar: AppBar(
         title: Text('Repositories'),
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: _publicRepos ,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No repositories found'));
+      body: _repos.isEmpty && _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        controller: _scrollController,
+        itemCount: _repos.length + (_hasMore ? 1 : 0), // Add 1 for loading indicator
+        itemBuilder: (context, index) {
+          if (index == _repos.length) {
+            return Center(child: CircularProgressIndicator()); // Loading indicator at the bottom
           }
-
-          final repos = snapshot.data!;
-          return ListView.builder(
-            itemCount: repos.length,
-            itemBuilder: (context, index) {
-              final repo = repos[index];
-              return ListTile(
-                title: Text(repo['name']),
-                subtitle: Text(repo['description'] ?? 'No description'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => IssueListScreen(
-                        owner: repo['owner']['login'],
-                        repoName: repo['name'],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          );
+          return RepoTile(repo: _repos[index]);
         },
       ),
+    );
+  }
+}
+class RepoTile extends StatelessWidget {
+  final RepoModel repo;
+
+  const RepoTile({Key? key, required this.repo}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(repo.name),
+      subtitle: Text('${repo.openIssuesCount} open issues'),
+      trailing: Icon(Icons.arrow_forward),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IssueListScreen(repo: repo),
+          ),
+        );
+      },
     );
   }
 }

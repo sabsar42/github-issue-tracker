@@ -17,6 +17,7 @@ class ProfileHeader extends StatelessWidget {
             radius: 50,
           ),
           SizedBox(height: 16),
+
           Text(
             user.name ?? 'No Name Provided',
             style: TextStyle(
