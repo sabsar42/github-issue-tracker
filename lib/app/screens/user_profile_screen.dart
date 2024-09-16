@@ -17,6 +17,7 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
+
 class _ProfileScreenState extends State<ProfileScreen> {
   final AuthController _authController = Get.put(AuthController());
   late Future<UserModel> userProfile;
