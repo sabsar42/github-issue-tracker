@@ -27,15 +27,13 @@ class GitHubService extends GetxController {
   }
 
   Future<List<RepoModel>> fetchReposWithPagination({
-    String? organization, // Optional parameter for organization
+    String? organization,
     int page = 1,
     int perPage = 20,
   }) async {
     List<RepoModel> repos = [];
 
     try {
-
-      // Fetch public repositories
       final publicUrl = Uri.parse('https://api.github.com/search/repositories?q=issues:>0&sort=issues&order=desc&page=$page&per_page=$perPage');
       final publicResponse = await http.get(publicUrl);
 
@@ -55,15 +53,17 @@ class GitHubService extends GetxController {
 
         if (orgResponse.statusCode == 200) {
           List<dynamic> orgJsonData = json.decode(orgResponse.body);
-          List<RepoModel> orgRepos = orgJsonData.map((repoJson) => RepoModel.fromJson(repoJson)).toList();
+          List<RepoModel> orgRepos = orgJsonData
+              .map((repoJson) => RepoModel.fromJson(repoJson))
+              .toList();
           repos.addAll(orgRepos);
         } else {
           throw Exception('Failed to load organization repositories');
         }
       }
 
-      // // Sort repositories alphabetically by name
-      // repos.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      repos
+          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
       return repos;
     } catch (e) {
@@ -71,56 +71,6 @@ class GitHubService extends GetxController {
     }
   }
 
-
-  // Future<List<RepoModel>> fetchReposWithPagination({required int page, required int perPage, String query = ''}) async {
-  //   String url;
-  //
-  //   if (query.isNotEmpty) {
-  //     url = '$baseUrl/search/repositories?q=$query&page=$page&per_page=$perPage';
-  //   } else {
-  //
-  //     url = '$baseUrl/user/repos?page=$page&per_page=$perPage';
-  //   }
-  //
-  //   final response = await http.get(Uri.parse(url));
-  //   if (response.statusCode == 200) {
-  //     final json = jsonDecode(response.body);
-  //     final List<dynamic> repoList = query.isNotEmpty ? json['items'] : json; // 'items' for search results
-  //
-  //     return repoList.map((repo) => RepoModel.fromJson(repo)).toList();
-  //   } else {
-  //     throw Exception('Failed to load repositories');
-  //   }
-  // }
-  // Future<List<dynamic>> fetchRepoIssues(String owner, String repo) async {
-  //   final response = await http.get(
-  //     Uri.parse('$baseUrl/repos/$owner/$repo/issues'),
-  //     headers: {
-  //       'Accept': 'application/vnd.github.v3+json',
-  //     },
-  //   );
-  //   if (response.statusCode == 200) {
-  //     return json.decode(response.body);
-  //   } else {
-  //     throw Exception('Failed to load Issues');
-  //   }
-  // }
-
-  // Future<List<IssueModel>> fetchIssues(String owner, String repo) async {
-  //   final response = await http.get(
-  //     Uri.parse('$baseUrl/repos/$owner/$repo/issues'),
-  //     headers: {
-  //       'Accept': 'application/vnd.github.v3+json',
-  //     },
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     final List<dynamic> data = json.decode(response.body);
-  //     return data.map((json) => IssueModel.fromJson(json)).toList();
-  //   } else {
-  //     throw Exception('Failed to load issues: ${response.statusCode} ${response.body}');
-  //   }
-  // }
   Future<List<IssueModel>> fetchIssues(String owner, String repo, {int page = 1, int perPage = 30}) async {
     final response = await http.get(Uri.parse(
         'https://api.github.com/repos/$owner/$repo/issues?state=open&page=$page&per_page=$perPage'));
@@ -132,6 +82,7 @@ class GitHubService extends GetxController {
       throw Exception('Failed to load issues');
     }
   }
+
   Future<List<IssueModel>> searchIssuesByTitle(String title) async {
     final url = 'https://api.github.com/search/issues?q=$title'; // Adjust URL if necessary
     final response = await http.get(Uri.parse(url));
@@ -145,6 +96,4 @@ class GitHubService extends GetxController {
       throw Exception('Failed to load issues');
     }
   }
-
-
 }

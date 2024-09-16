@@ -21,6 +21,7 @@ class ProfileHeader extends StatelessWidget {
           Text(
             user.name ?? 'No Name Provided',
             style: TextStyle(
+              color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -30,16 +31,9 @@ class ProfileHeader extends StatelessWidget {
             Text(
               user.bio!,
               style: TextStyle(
+                color: Colors.white70,
                 fontSize: 16,
                 fontStyle: FontStyle.italic,
-              ),
-            ),
-          if (user.location != null)
-            Text(
-              'Location: ${user.location}',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
               ),
             ),
         ],

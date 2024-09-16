@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import '../models/issue_model.dart';
+import '../models/repo_model.dart';
 import '../services/github_service.dart';
-import '../models/issue_model.dart'; // Import your issue model
-import '../models/repo_model.dart'; // Import your repo model
 
 class IssueListScreen extends StatefulWidget {
   final RepoModel repo;
-
   IssueListScreen({required this.repo});
 
   @override
   _IssueListScreenState createState() => _IssueListScreenState();
 }
+
 class _IssueListScreenState extends State<IssueListScreen> {
   late GitHubService _gitHubService;
   late Future<List<IssueModel>> _issuesFuture;
@@ -27,95 +27,129 @@ class _IssueListScreenState extends State<IssueListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Issues for ${widget.repo.name}",
-          style: TextStyle(color: Colors.white),
+        toolbarHeight: 70,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white70),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        backgroundColor: Colors.black54,
+        title: Text(
+          "Issues: ${widget.repo.name}",
+          style: TextStyle(color: Colors.white,
+          fontSize: 19,
+          fontWeight: FontWeight.w100),
+        ),
+        backgroundColor: Colors.black87,
         elevation: 0,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black54,
       body: FutureBuilder<List<IssueModel>>(
         future: _issuesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.black54,
+              ),
+            );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}', style: TextStyle(color: Colors.black)));
+            return Center(
+                child: Text('Error: ${snapshot.error}',
+                    style: TextStyle(color: Colors.white)));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No issues found', style: TextStyle(color: Colors.black)));
+            return Center(
+                child: Text('No issues found',
+                    style: TextStyle(color: Colors.white)));
           } else {
             final issues = snapshot.data!;
-
-            return ListView.builder(
-              padding: EdgeInsets.all(16.0),
-              itemCount: issues.length,
-              itemBuilder: (context, index) {
-                final issue = issues[index];
-
-                return Card(
-                  color: Colors.grey[100],
-                  elevation: 1,
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 3.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: ExpansionTile(
-                    leading: Icon(
-                      Icons.error_outline,
-                      color: issue.state == 'open' ? Colors.green : Colors.red,
-                      size: 24,
-                    ),
-                    title: Text(
-                      issue.title ?? 'No Title',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
-                    ),
-                    subtitle: Text(
-                      issue.state.toUpperCase(),
-                      style: TextStyle(
-                        color: issue.state == 'open' ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    tilePadding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 8.0),
-                    childrenPadding: EdgeInsets.all(16.0),
-                    children: [
-                      MarkdownBody(
-                        data: issue.body ?? 'No Details Available',
-                        imageBuilder: (uri, title, alt) {
-                          return Image.network(
-                            uri.toString(),
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                      : null,
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Center(child: Text('Image failed to load', style: TextStyle(color: Colors.red)));
-                            },
-                          );
-                        },
-                        styleSheet: MarkdownStyleSheet(
-                          p: TextStyle(fontSize: 14, color: Colors.black87),
-                          a: TextStyle(color: Colors.blueGrey),
-                          h1: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-                          h2: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
-                          h3: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
+            return IssueListView(issues);
           }
         },
+      ),
+    );
+  }
+
+  ListView IssueListView(List<IssueModel> issues) {
+    return ListView.builder(
+      padding: EdgeInsets.all(9.0),
+      itemCount: issues.length,
+      itemBuilder: (context, index) {
+        final issue = issues[index];
+
+        return Card(
+          color: Colors.grey[900],
+          elevation: 2,
+          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: ExpansionTile(
+            leading: Icon(
+              Icons.commit,
+              color: issue.state == 'open' ? Colors.green : Colors.red,
+              size: 24,
+            ),
+            title: Text(
+              issue.title ?? 'No Title',
+              style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  color: Colors.white),
+            ),
+            subtitle: Text(
+              issue.state.toUpperCase(),
+              style: TextStyle(
+                color: issue.state == 'open' ? Colors.green : Colors.red,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            tilePadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            childrenPadding: EdgeInsets.all(16.0),
+            children: [
+              expandedMarkDown(issue),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  MarkdownBody expandedMarkDown(IssueModel issue) {
+    return MarkdownBody(
+      data: issue.body ?? 'No Details Available',
+      imageBuilder: (uri, title, alt) {
+        return Image.network(
+          uri.toString(),
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        (loadingProgress.expectedTotalBytes ?? 1)
+                    : null,
+                color: Colors.black54,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+                child: Text('Image failed to load',
+                    style: TextStyle(color: Colors.red)));
+          },
+        );
+      },
+      styleSheet: MarkdownStyleSheet(
+        p: TextStyle(fontSize: 14, color: Colors.white70),
+        a: TextStyle(color: Colors.blueGrey),
+        h1: TextStyle(
+            fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+        h2: TextStyle(
+            fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+        h3: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }

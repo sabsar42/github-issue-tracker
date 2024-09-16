@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../services/github_service.dart';
+
 import '../models/repo_model.dart';
+import '../services/github_service.dart';
 import 'issue_list_screen.dart';
 
 class RepoListScreen extends StatefulWidget {
@@ -61,9 +62,6 @@ class _RepoListScreenState extends State<RepoListScreen> {
   }
 
 
-
-
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -73,35 +71,58 @@ class _RepoListScreenState extends State<RepoListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black54,
       appBar: AppBar(
-        title: Text('Repositories'),
+        toolbarHeight: 70,
+        backgroundColor: Colors.black87,
+        title: Center(
+          child: Text(
+            'REPOSITORIES',
+            style: TextStyle(
+                fontWeight: FontWeight.w300, fontSize: 16, color: Colors.white),
+          ),
+        ),
       ),
       body: _repos.isEmpty && _isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-        controller: _scrollController,
-        itemCount: _repos.length + (_hasMore ? 1 : 0), // Add 1 for loading indicator
-        itemBuilder: (context, index) {
-          if (index == _repos.length) {
-            return Center(child: CircularProgressIndicator()); // Loading indicator at the bottom
-          }
-          return RepoTile(repo: _repos[index]);
-        },
-      ),
+          : ListView.separated(
+              controller: _scrollController,
+              itemCount: _repos.length + (_hasMore ? 1 : 0),
+              // Add 1 for loading indicator
+              separatorBuilder: (context, index) => SizedBox(height: 0.1),
+              // Space between items
+              itemBuilder: (context, index) {
+                if (index == _repos.length) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black54,
+                      backgroundColor: Colors.black54,
+                    ),
+                  ); // Loading indicator at the bottom
+                }
+                return RepoTile(repo: _repos[index]);
+              },
+            ),
     );
   }
 }
+
 class RepoTile extends StatelessWidget {
   final RepoModel repo;
-
   const RepoTile({Key? key, required this.repo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(repo.name),
+      minVerticalPadding: 10,
+      tileColor: Colors.black87,
+      title: Text(
+        repo.name,
+        style: TextStyle(
+            fontWeight: FontWeight.w300, fontSize: 16, color: Colors.white),
+      ),
       subtitle: Text('${repo.openIssuesCount} open issues'),
-      trailing: Icon(Icons.arrow_forward),
+      trailing: Icon(Icons.arrow_forward_ios),
       onTap: () {
         Navigator.push(
           context,

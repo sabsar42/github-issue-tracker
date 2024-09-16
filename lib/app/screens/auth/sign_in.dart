@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 import '../../controller/auth_controller.dart';
 import '../main_bottom_nav_screen.dart';
 
@@ -12,7 +11,10 @@ class SignIn extends StatelessWidget {
 
   void showSnackBar(String message) {
     var snackbar = SnackBar(
-      content: Text(message),
+      content: Text(
+        message,
+        style: TextStyle(color: Colors.black),
+      ),
       backgroundColor: Colors.white,
     );
 
@@ -56,12 +58,12 @@ class SignIn extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
+
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       labelText: 'Github Username',
                       floatingLabelStyle: TextStyle(
-                        color: Color.fromRGBO(147, 18, 18, 1.0),
-                      ),
+                          color: Colors.brown),
                       hintText: '',
                     ),
                   ),
@@ -81,7 +83,7 @@ class SignIn extends StatelessWidget {
                       showSnackBar("Sign In Successful");
                     },
                     child: Text(
-                      "SIGN IN",
+                      "Continue",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:github_issue_tracker/app/screens/repo_list_screen.dart';
 import 'package:github_issue_tracker/app/screens/user_profile_screen.dart';
-
-import '../controller/auth_controller.dart';
 
 
 class MainBottomNavScreen extends StatefulWidget {
@@ -15,7 +12,6 @@ class MainBottomNavScreen extends StatefulWidget {
 
 class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   int _selectedIndex = 0;
-  final AuthController _authController = Get.put(AuthController());
 
   final List<Widget> _screens = [
     RepoListScreen(),
@@ -25,24 +21,35 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black87,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.folder_copy_outlined), label: 'Repositories'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_2_outlined), label: 'Profile'),
-        ],
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.transparent,
+              width: 0,
+            ),
+          ),
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Color.fromARGB(255, 3, 10, 10),
+          elevation: 8,
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          selectedItemColor: Colors.white70,
+          unselectedItemColor: Colors.blueGrey[800],
+          showUnselectedLabels: true,
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.folder_copy_outlined), label: 'Repositories'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person_2_outlined), label: 'Profile'),
+          ],
+        ),
       ),
     );
   }

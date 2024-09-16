@@ -26,6 +26,7 @@ class ProfileStats extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
+            color: Colors.white70,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -35,7 +36,7 @@ class ProfileStats extends StatelessWidget {
           title,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.grey[600],
+            color: Colors.white,
           ),
         ),
       ],
