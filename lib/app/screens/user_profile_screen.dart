@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:github_issue_tracker/app/screens/auth/sign_in.dart';
+
 import '../controller/auth_controller.dart';
 import '../models/user_model.dart';
 import '../services/github_service.dart';
 import '../widgets/profile_header_widget.dart';
 import '../widgets/profile_stats_widget.dart';
 import '../widgets/view_profile_button_widget.dart';
-
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -45,6 +46,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.login_outlined, color: Colors.white),
+            // Notification Icon
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SignIn(),
+                ),
+              );
+            },
+          ),
+        ],
         centerTitle: true,
       ),
       body: FutureBuilder<UserModel>(

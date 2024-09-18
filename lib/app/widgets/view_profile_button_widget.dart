@@ -13,7 +13,7 @@ class ViewProfileButton extends StatelessWidget {
         print('canLaunchUrl returned true');
         final bool launched = await launchUrl(
           uri,
-          mode: LaunchMode.inAppWebView,
+          mode: LaunchMode.inAppBrowserView,
           webViewConfiguration: const WebViewConfiguration(
             enableJavaScript: true,
             enableDomStorage: true,
