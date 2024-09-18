@@ -16,8 +16,8 @@ GitHub Issue Tracker is a powerful and user-friendly application designed to hel
 
 ## App Screenshot :
 
-![1.jpg](assets%2Fscreesnshots%2F1.jpg)
-![2.jpg](assets%2Fscreesnshots%2F2.jpg)
-![3.jpg](assets%2Fscreesnshots%2F3.jpg)
-![4.jpg](assets%2Fscreesnshots%2F4.jpg)
-![5.jpg](assets%2Fscreesnshots%2F5.jpg)
+![1](https://github.com/user-attachments/assets/3454ab4f-af4a-49f2-b37f-132c4b122ae1)
+![2](https://github.com/user-attachments/assets/2d39dba1-ba82-4b08-a238-87c0ccc12403)
+![3](https://github.com/user-attachments/assets/37f8004f-c3cd-4975-9cea-47c68aa454ff)
+![4](https://github.com/user-attachments/assets/f1dc3891-6040-49b2-b01c-47b969bf00db)
+![5](https://github.com/user-attachments/assets/10cf20e2-faa4-43f4-9014-03d9fe235569)
