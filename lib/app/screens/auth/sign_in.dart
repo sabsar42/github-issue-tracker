@@ -1,7 +1,5 @@
-// lib/screens/auth/sign_in.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../controller/auth_controller.dart';
 import '../main_bottom_nav_screen.dart';
 
@@ -49,7 +47,7 @@ class SignIn extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: 'FontMain',
                     fontSize: 28,
-                    fontWeight: FontWeight.w100,
+                    fontWeight: FontWeight.w200,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -59,14 +57,25 @@ class SignIn extends StatelessWidget {
                     controller: usernameController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: Colors.black87,
+                          width: 1.5,
+                        ),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: Colors.black87,
+                          width: 0.5,
+                        ),
+                      ),
                       border: OutlineInputBorder(
-
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       labelText: 'Github Username',
-                      floatingLabelStyle: const TextStyle(
-                          color: Colors.brown),
-                      hintText: '',
+                      floatingLabelStyle: const TextStyle(color: Colors.brown),
                     ),
                   ),
                 ),
@@ -82,7 +91,7 @@ class SignIn extends StatelessWidget {
                           builder: (context) => const MainBottomNavScreen(),
                         ),
                       );
-                      showSnackBar("Sign In Successful");
+                      showSnackBar("Welcome aboard");
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -93,8 +102,9 @@ class SignIn extends StatelessWidget {
                       fixedSize: const Size(350.0, 60.0),
                     ),
                     child: const Text(
-                      "Continue",
+                      "CONTINUE",
                       style: TextStyle(
+                        fontWeight: FontWeight.w400,
                         fontSize: 16,
                         color: Colors.white,
                       ),

@@ -1,5 +1,3 @@
-// lib/models/user_model.dart
-
 class UserModel {
   final String login;
   final int id;

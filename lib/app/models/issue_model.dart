@@ -2,7 +2,7 @@ class IssueModel {
   final String? title;
   final String? body;
   final String state;
-  final List<String>? labels; // Add labels field
+  final List<String>? labels;
 
   IssueModel({
     this.title,
@@ -12,7 +12,7 @@ class IssueModel {
   });
 
   factory IssueModel.fromJson(Map<String, dynamic> json) {
-    var labelsList = json['labels'] as List<dynamic>?; // Adjust based on actual structure
+    var labelsList = json['labels'] as List<dynamic>?;
     List<String>? labels = labelsList?.map((label) => label['name'] as String).toList();
 
     return IssueModel(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../models/repo_model.dart';
 import '../services/github_service.dart';
 import 'issue_list_screen.dart';
@@ -43,7 +42,6 @@ class _RepoListScreenState extends State<RepoListScreen> {
         perPage: _perPage,
       );
 
-      // Sort the repositories alphabetically by name
       newRepos.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
       setState(() {
@@ -71,10 +69,10 @@ class _RepoListScreenState extends State<RepoListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor:  const Color.fromARGB(255, 12, 15, 17),
       appBar: AppBar(
-        toolbarHeight: 70,
-        backgroundColor: Colors.black87,
+        toolbarHeight: 50,
+        backgroundColor:  const Color.fromARGB(255, 12, 15, 17),
         title: const Center(
           child: Text(
             'REPOSITORIES',
@@ -88,17 +86,15 @@ class _RepoListScreenState extends State<RepoListScreen> {
           : ListView.separated(
               controller: _scrollController,
               itemCount: _repos.length + (_hasMore ? 1 : 0),
-              // Add 1 for loading indicator
               separatorBuilder: (context, index) => const SizedBox(height: 0.1),
-              // Space between items
               itemBuilder: (context, index) {
                 if (index == _repos.length) {
                   return const Center(
                     child: CircularProgressIndicator(
-                      color: Colors.black54,
-                      backgroundColor: Colors.black54,
+                      color:  const Color.fromARGB(255, 12, 15, 17),
+                      backgroundColor:  const Color.fromARGB(255, 12, 15, 17),
                     ),
-                  ); // Loading indicator at the bottom
+                  );
                 }
                 return RepoTile(repo: _repos[index]);
               },
@@ -115,7 +111,7 @@ class RepoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       minVerticalPadding: 10,
-      tileColor: Colors.black87,
+      tileColor: const Color.fromARGB(255, 12, 15, 17),
       title: Text(
         repo.name,
         style: const TextStyle(

@@ -1,7 +1,5 @@
-// lib/screens/user_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../controller/auth_controller.dart';
 import '../models/user_model.dart';
 import '../services/github_service.dart';
@@ -33,9 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Set the background color to black
+      backgroundColor: const Color.fromARGB(255, 12, 15, 17),
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: Colors.transparent,
         title: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
@@ -43,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.w300,
-              color: Colors.white, // Ensure the text is visible
+              color: Colors.white,
             ),
           ),
         ),
@@ -58,14 +56,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return Center(
               child: Text(
                 'Error: ${snapshot.error}',
-                style: const TextStyle(color: Colors.white), // Error text color
+                style: const TextStyle(color: Colors.white),
               ),
             );
           } else if (!snapshot.hasData) {
             return const Center(
               child: Text(
                 'No Data Available',
-                style: TextStyle(color: Colors.white), // No data text color
+                style: TextStyle(color: Colors.white),
               ),
             );
           } else {
@@ -88,7 +86,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileStats(user: user),
           const SizedBox(height: 30),
           Center(
-            child: ViewProfileButton(url: user.htmlUrl),
+            child: InkWell(
+              child: ViewProfileButton(url: user.htmlUrl),
+            ),
           ),
         ],
       ),

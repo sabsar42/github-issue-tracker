@@ -5,22 +5,41 @@ class ViewProfileButton extends StatelessWidget {
   final String url;
   const ViewProfileButton({super.key, required this.url});
 
-  Future<void> _launchURL(String url) async {
+  Future<void> _launchURL(BuildContext context, String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $url';
+    try {
+      print('Attempting to launch URL: $url');
+      if (await canLaunchUrl(uri)) {
+        print('canLaunchUrl returned true');
+        final bool launched = await launchUrl(
+          uri,
+          mode: LaunchMode.inAppWebView,
+          webViewConfiguration: const WebViewConfiguration(
+            enableJavaScript: true,
+            enableDomStorage: true,
+          ),
+        );
+        print('launchUrl returned: $launched');
+        if (!launched) {
+          throw 'URL launch returned false';
+        }
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error launching URL: $e')),
+      );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
       ),
-      onPressed: () => _launchURL(url),
+      onPressed: () => _launchURL(context, url),
       child: const Text('View Profile', style: TextStyle(color: Colors.black)),
     );
   }

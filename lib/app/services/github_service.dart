@@ -46,7 +46,7 @@ class GitHubService extends GetxController {
         throw Exception('Failed to load public repositories');
       }
 
-      // Fetch organization repositories if organization is specified
+      // Fetching organization repositories
       if (organization != null && organization.isNotEmpty) {
         final orgUrl = Uri.parse('https://api.github.com/orgs/$organization/repos?page=$page&per_page=$perPage');
         final orgResponse = await http.get(orgUrl);
@@ -84,7 +84,7 @@ class GitHubService extends GetxController {
   }
 
   Future<List<IssueModel>> searchIssuesByTitle(String title) async {
-    final url = 'https://api.github.com/search/issues?q=$title'; // Adjust URL if necessary
+    final url = 'https://api.github.com/search/issues?q=$title';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

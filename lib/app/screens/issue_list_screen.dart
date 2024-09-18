@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+
 import '../models/issue_model.dart';
 import '../models/repo_model.dart';
 import '../services/github_service.dart';
@@ -42,33 +43,34 @@ class _IssueListScreenState extends State<IssueListScreen> {
         ),
         title: Text(
           "Issues: ${widget.repo.name}",
-          style: const TextStyle(color: Colors.white,
-              fontSize: 19,
-              fontWeight: FontWeight.w100),
+          style: const TextStyle(
+              color: Colors.white, fontSize: 19, fontWeight: FontWeight.w100),
         ),
-        backgroundColor: Colors.black87,
+        backgroundColor: const Color.fromARGB(255, 12, 15, 17),
         elevation: 0,
       ),
-      backgroundColor: Colors.black54,
+      backgroundColor: const Color.fromARGB(255, 12, 15, 17),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search Issues...',
-                hintStyle: const TextStyle(color: Colors.white70),
+                hintStyle: const TextStyle(
+                    color: Colors.white70, fontWeight: FontWeight.w100),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(3.0),
+                  borderRadius: BorderRadius.circular(4.0),
                   borderSide: const BorderSide(color: Colors.white70),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(3.0),
+                  borderRadius: BorderRadius.circular(4.0),
                   borderSide: const BorderSide(color: Colors.blueGrey),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(4.0),
                   borderSide: const BorderSide(color: Colors.white70),
                 ),
               ),
@@ -119,7 +121,7 @@ class _IssueListScreenState extends State<IssueListScreen> {
         final issue = issues[index];
 
         return Card(
-          color: Colors.grey[900],
+          color: const Color.fromARGB(255, 22, 28, 31),
           elevation: 2,
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
           shape: RoundedRectangleBorder(
@@ -169,9 +171,9 @@ class _IssueListScreenState extends State<IssueListScreen> {
               child: CircularProgressIndicator(
                 value: loadingProgress.expectedTotalBytes != null
                     ? loadingProgress.cumulativeBytesLoaded /
-                    (loadingProgress.expectedTotalBytes ?? 1)
+                        (loadingProgress.expectedTotalBytes ?? 1)
                     : null,
-                color: Colors.black54,
+                color: const Color.fromARGB(255, 12, 15, 17),
               ),
             );
           },
