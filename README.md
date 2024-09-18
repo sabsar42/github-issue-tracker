@@ -1,16 +1,15 @@
-# github_issue_tracker
+# GitHub Issue Tracker
 
-A new Flutter project.
+GitHub Issue Tracker is a powerful and user-friendly application designed to help developers and project managers efficiently track and manage issues across GitHub repositories.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Multi-repository Support**: Track issues from multiple GitHub repositories in one place.
+- **Search Issues**: Search Issues quickly find relevant issues.
+- **Detailed Issue View**: View comprehensive information about each issue, including comments, labels, and assignees.
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository: git clone https://github.com/yourusername/github-issue-tracker.git
+2. Navigate to the project directory: cd github-issue-tracker
+3. Install dependencies
