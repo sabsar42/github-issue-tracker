@@ -15,7 +15,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
 
   final List<Widget> _screens = [
     const RepoListScreen(),
-    const ProfileScreen(),
+     const ProfileScreen(),
   ];
 
   @override

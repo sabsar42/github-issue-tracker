@@ -16,7 +16,6 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-
 class _ProfileScreenState extends State<ProfileScreen> {
   final AuthController _authController = Get.put(AuthController());
   late Future<UserModel> userProfile;
@@ -49,14 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.login_outlined, color: Colors.white),
-            // Notification Icon
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SignIn(),
-                ),
-              );
+              _showSignOutConfirmationDialog(context);
             },
           ),
         ],
@@ -107,6 +100,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // Method to show confirmation dialog
+  void _showSignOutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Sign Out'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Sign Out'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                _authController.signOut();  // Call sign-out method
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

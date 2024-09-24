@@ -2,10 +2,80 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/issue_model.dart';
 import '../models/repo_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:github_sign_in_plus/github_sign_in_plus.dart';
+
+import '../screens/main_bottom_nav_screen.dart';
+
+
+
 
 class GitHubService {
   late final String token;
   final String baseUrl = "https://api.github.com";
+
+
+  String? githubUsername;
+
+  // GitHub sign-in method
+  Future<void> signInWithGitHub(BuildContext context) async {
+    try {
+      final clientId = dotenv.env['CLIENT_ID']!;
+      final clientSecret = dotenv.env['CLIENT_SECRET']!;
+      final redirectUrl = dotenv.env['CLIENT_CALLBACK_URL']!;
+
+      final GitHubSignIn gitHubSignIn = GitHubSignIn(
+        clientId: clientId,
+        clientSecret: clientSecret,
+        redirectUrl: redirectUrl,
+      );
+
+      final result = await gitHubSignIn.signIn(context);
+
+      if (result.status == GitHubSignInResultStatus.ok) {
+        final githubAuthCredential = GithubAuthProvider.credential(result.token!);
+
+        // Sign in to Firebase using GitHub credential
+        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);
+
+        // Access user information
+        final Map<String, dynamic>? profileData = userCredential.additionalUserInfo?.profile;
+        githubUsername = profileData?['login']; // Store GitHub username
+
+        final User? user = userCredential.user;
+
+        print('User ID: ${user?.uid}');
+        print('User Email: ${user?.email}');
+        print('GitHub Username: $githubUsername');
+        print('Is New User: ${userCredential.additionalUserInfo?.isNewUser}');
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainBottomNavScreen(),
+          ),
+        );
+
+      } else {
+        // Handle GitHub sign-in failure
+        _showSnackBar(context, "GitHub sign-in failed: ${result.status}");
+      }
+    } catch (error) {
+      _showSnackBar(context, "Error during sign-in: $error");
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    final snackbar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.white,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
 
   Future<Map<String, dynamic>> fetchUserProfile(String username) async {
     final response = await http.get(
