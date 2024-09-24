@@ -1,12 +1,9 @@
 import 'dart:convert';
-
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
 import '../models/issue_model.dart';
 import '../models/repo_model.dart';
 
-class GitHubService extends GetxController {
+class GitHubService {
   late final String token;
   final String baseUrl = "https://api.github.com";
 

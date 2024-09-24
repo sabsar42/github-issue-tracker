@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/auth_controller.dart';
 import '../main_bottom_nav_screen.dart';
+import 'package:github_sign_in_plus/github_sign_in_plus.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SignIn extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -9,8 +12,55 @@ class SignIn extends StatelessWidget {
 
   SignIn({super.key});
 
-  void showSnackBar(String message) {
-    var snackbar = SnackBar(
+  // GitHub sign-in method
+  Future<void> signInWithGitHub(BuildContext context) async {
+    try {
+      // Access the environment variables
+      final clientId = dotenv.env['CLIENT_ID']!;
+      final clientSecret = dotenv.env['CLIENT_SECRET']!;
+      final redirectUrl = dotenv.env['CLIENT_CALLBACK_URL']!;
+
+      // Create GitHubSignIn instance
+      final GitHubSignIn gitHubSignIn = GitHubSignIn(
+          clientId: clientId,
+          clientSecret: clientSecret,
+          redirectUrl: redirectUrl);
+
+      // Trigger the sign-in flow
+      final result = await gitHubSignIn.signIn(context);
+
+      // Check if the sign-in was successful
+      if (result.status == GitHubSignInResultStatus.ok) {
+        // Create a credential from the access token
+        final githubAuthCredential =
+        GithubAuthProvider.credential(result.token!);
+
+        // Sign in to Firebase using GitHub credential
+        await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);
+
+        // Show success snack bar
+        showSnackBar(context, "Signed in successfully with GitHub!");
+
+        // Navigate to the main screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainBottomNavScreen(),
+          ),
+        );
+      } else {
+        // Handle GitHub sign-in failure
+        showSnackBar(context, "GitHub sign-in failed: ${result.status}");
+      }
+    } catch (error) {
+      // Handle any errors
+      showSnackBar(context, "Error during sign-in: $error");
+    }
+  }
+
+  // Snack bar display method
+  void showSnackBar(BuildContext context, String message) {
+    final snackbar = SnackBar(
       content: Text(
         message,
         style: const TextStyle(color: Colors.black),
@@ -18,7 +68,7 @@ class SignIn extends StatelessWidget {
       backgroundColor: Colors.white,
     );
 
-    ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar);
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   @override
@@ -74,7 +124,7 @@ class SignIn extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      labelText: 'Github Username',
+                      labelText: 'GitHub Username',
                       floatingLabelStyle: const TextStyle(color: Colors.brown),
                     ),
                   ),
@@ -83,15 +133,11 @@ class SignIn extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       _authController.setUsername(usernameController.text);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainBottomNavScreen(),
-                        ),
-                      );
-                      showSnackBar("Welcome aboard");
+
+                      // Call GitHub sign-in
+                      await signInWithGitHub(context);
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -102,7 +148,7 @@ class SignIn extends StatelessWidget {
                       fixedSize: const Size(350.0, 60.0),
                     ),
                     child: const Text(
-                      "CONTINUE",
+                      "Sign In with GitHub",
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
