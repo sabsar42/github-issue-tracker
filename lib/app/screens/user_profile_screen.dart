@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:github_issue_tracker/app/screens/auth/sign_in.dart';
-
 import '../controller/auth_controller.dart';
 import '../models/user_model.dart';
 import '../services/github_service.dart';
@@ -103,26 +101,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Method to show confirmation dialog
   void _showSignOutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirm Sign Out'),
-          content: const Text('Are you sure you want to sign out?'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          backgroundColor: Colors.grey,
+          title: const Text(
+            'CONFIRM SIGN OUT',
+            style: TextStyle(
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+              fontSize: 16,
+            ),
+          ),
           actions: [
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text(
+                'CANCEL',
+                style: TextStyle(
+                  color: Colors.brown,
+                  fontSize: 12,
+                ),
+              ),
               onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Sign Out'),
+              child: const Text(
+                'SIGN OUT',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 12,
+                ),
+              ),
               onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
-                _authController.signOut();  // Call sign-out method
+                Navigator.of(context).pop();
+                _authController.signOut();
               },
             ),
           ],

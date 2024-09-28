@@ -42,15 +42,18 @@ class SignIn extends StatelessWidget {
                     fontWeight: FontWeight.w200,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(28, 10, 28, 10),
                   child: ElevatedButton(
                     onPressed: () async {
-                      await _gitHubService.signInWithGitHub(context);
-                      _authController.setUsername(
-                          _gitHubService.githubUsername ??
-                              "No username available");
+                      _authController.setUsername("Guest User");
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainBottomNavScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -85,13 +88,12 @@ class SignIn extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: () async {
-                      _authController.setUsername("Guest User");
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MainBottomNavScreen(),
-                        ),
-                      );
+                      await _gitHubService.signInWithGitHub(context);
+                      _authController.setUsername(
+                          _gitHubService.githubUsername ??
+                              "No username available");
+
+
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

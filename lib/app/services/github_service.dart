@@ -5,13 +5,8 @@ import '../models/repo_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
-
 import '../screens/main_bottom_nav_screen.dart';
-
-
 
 
 class GitHubService {
