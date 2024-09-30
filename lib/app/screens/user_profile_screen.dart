@@ -131,6 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.of(context).pop();
               },
             ),
+
             TextButton(
               child: const Text(
                 'SIGN OUT',
