@@ -20,6 +20,8 @@ class AuthController extends GetxController {
       // Sign out from Firebase
       await _auth.signOut();
 
+
+
       // If you are using GitHub sign-in, add GitHub sign-out logic here
       GitHubSignIn gitHubSignIn = GitHubSignIn(
         clientId: 'YOUR_GITHUB_CLIENT_ID',
