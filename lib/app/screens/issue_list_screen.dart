@@ -78,6 +78,7 @@ class _IssueListScreenState extends State<IssueListScreen> {
             ),
           ),
           Expanded(
+
             child: FutureBuilder<List<IssueModel>>(
               future: _issuesFuture,
               builder: (context, snapshot) {
